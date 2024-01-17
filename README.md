@@ -1,1 +1,39 @@
-# ELF-application
+### ELF-前端
+
+##### 注意事项：
+
+1、app使用electron（自行了解），打包很方便，几乎只需要编写前端
+
+2、ui，布局另行讨论，暂定左右布局，左侧是菜单栏，选择压缩和解压，右侧是选取文件和提交部分
+
+3、修改、提交前先拉取一次
+
+##### 搭建流程：
+
+1、下载node.js
+
+[node.js官网](https://nodejs.org/en)
+
+2、安装cnpm
+
+```shell
+npm install cnpm -g  --registry=https://registry.npm.taobao.org
+```
+
+3、安装electron
+
+```shell
+cnpm install electron -g
+```
+
+4、使用 ide 连接 github 远程仓库
+
+###### 推荐webstorm
+
+5、使用electron预览
+
+```shell
+electron .
+```
+
+此时应该会出现预览窗口
