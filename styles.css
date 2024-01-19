@@ -79,7 +79,7 @@ a {
 
 .sidebar-scroll .logo {
     text-align: center;
-    height:100px;
+    height:120px;
 }
 
 .sidebar-scroll .logo p{
@@ -88,8 +88,12 @@ a {
     color: aliceblue;
 }
 
+.sidebar-scroll .logo img{
+    margin-top: 9px;
+}
+
 .sidebar-scroll .menu li {
-    margin-bottom: 5px;
+    margin-bottom: 8px;
     position: relative;
 }
 
@@ -103,10 +107,15 @@ a {
     display: inline-block;
     line-height: 44px;
     width: 180px;
-    padding-left: 52px;
+    padding-left: 30px;
     background-repeat: no-repeat;
     background-size: 16px auto;
     background-position: 25px 14px;
     border-left: #404040 2px solid;
+}
+
+.right-content {
+    position: relative;
+    left: 180px;
 }
 

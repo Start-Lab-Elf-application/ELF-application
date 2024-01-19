@@ -10,7 +10,7 @@ app.on('ready',() => {
 
     mainWindow = new BrowserWindow({width:800, height:600});
 
-    mainWindow.loadFile('index.html');
+    mainWindow.loadFile('home.html');
 
     mainWindow.on('closed',() => {
         mainWindow = null;
