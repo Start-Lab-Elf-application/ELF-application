@@ -8,7 +8,12 @@ let mainWindow = null;
 
 app.on('ready',() => {
 
-    mainWindow = new BrowserWindow({width:800, height:600});
+    mainWindow = new BrowserWindow({width:800, height:600,
+        webPreferences: {
+            devTools:true,
+            nodeIntegration:true,
+            contextIsolation:false
+        }});
 
     mainWindow.loadFile('home.html');
 
