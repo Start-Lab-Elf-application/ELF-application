@@ -1,4 +1,4 @@
-const { exec } = require('child_process');
+const { exec, dialog } = require('child_process');
 
 window.onload = function() {
 
@@ -8,7 +8,13 @@ window.onload = function() {
     var uploadButtonForCompression = document.getElementById("upload-button-compress");
 
     var selectDirectory = document.getElementById("select-directory");
+    var openDirectory = document.getElementById("open-directory");
     var directoryPath = document.getElementById("directory-path");
+
+    var storedFolderPath = localStorage.getItem('compressFolderPath');
+    if (storedFolderPath) {
+        directoryPath.value = storedFolderPath;
+    }
 
     function preventDefaultAndStopPropagation(e) {
         e.preventDefault();
@@ -50,7 +56,13 @@ window.onload = function() {
         let compressedFileNameT = inputPath.replace(/.*\\/,"");
         let compressedFileName = compressedFileNameT.replace(".csv",".elf");
 
-        let outputPath = `${localStorage.getItem('compressFolderPath')}\\${compressedFileName}`;
+        if(localStorage.getItem('compressFolderPath')){
+            let outputPath = `${localStorage.getItem('compressFolderPath')}\\${compressedFileName}`;
+        }
+        else{
+            let outputPath = inputpath.replace(".csv",".elf");
+            localStorage.setItem('compressFolderPath',outputPath.replace(/\\[^\\]*$/, ""))
+        }
 
         runJarFile(0,inputPath,outputPath);
     });
@@ -70,8 +82,38 @@ window.onload = function() {
             localStorage.setItem('compressFolderPath',folderPath)
         });
     });
-};
 
+    /*
+    selectDirectory.addEventListener("click", function() {
+
+        dialog.showOpenDialog({
+            properties: ['openDirectory'],
+        }).then(result => {
+            if (!result.canceled && result.filePaths.length > 0) {
+                var folderPath = result.filePaths[0];
+                directoryPath.value = folderPath;
+
+                localStorage.setItem('compressFolderPath', folderPath);
+            }
+        }).catch(err => {
+            console.error(err);
+        });
+    });
+    到底也没搞清楚为什么报错，好像是electron版本太高了，但是选择文件夹的版本会选择所有文件，文件夹很大的话会直接卡死
+    -_-
+
+    TODO：How to use Dialog ?
+    TODO: gys's electron -v: 28.1.0
+    */
+    openDirectory.addEventListener("click", function() {
+        var folderPath = localStorage.getItem('compressFolderPath');
+        if (folderPath) {
+            exec(`start ${folderPath}`);
+        } else {
+            console.error('Folder path not found in local storage.');
+        }
+    });
+};
 
 function runJarFile(flag,inputFilePath, outputFilePath) {
     const javaExecutable = 'java';

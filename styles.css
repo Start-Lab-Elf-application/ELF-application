@@ -126,6 +126,15 @@ a {
     margin-bottom: 50px;
 }
 
+#directory-path {
+    width: 300px;
+    border: 1px solid gray;
+}
+
+#directory-path:focus{
+    outline:none;
+}
+
 #file-input {
     width: 0px;
     height: 0px;
