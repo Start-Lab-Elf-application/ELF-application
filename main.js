@@ -1,5 +1,6 @@
 let electron = require('electron');
 
+
 let app = electron.app;
 
 let BrowserWindow = electron.BrowserWindow;
@@ -12,7 +13,7 @@ app.on('ready',() => {
         webPreferences: {
             devTools:true,
             nodeIntegration:true,
-            contextIsolation:false
+            contextIsolation:false,
         }});
 
     mainWindow.loadFile('home.html');

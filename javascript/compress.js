@@ -7,6 +7,9 @@ window.onload = function() {
 
     var uploadButtonForCompression = document.getElementById("upload-button-compress");
 
+    var selectDirectory = document.getElementById("select-directory");
+    var directoryPath = document.getElementById("directory-path");
+
     function preventDefaultAndStopPropagation(e) {
         e.preventDefault();
         e.stopPropagation();
@@ -43,17 +46,30 @@ window.onload = function() {
     });
 
     uploadButtonForCompression.addEventListener("click", function() {
-        let inputpath = fileInput.files[0].path;
-        let outputpath = inputpath.replace(/\.csv$/, '.elf');
-        runJarFile(0,inputpath,outputpath);
+        let inputPath = fileInput.files[0].path;
+        let compressedFileNameT = inputPath.replace(/.*\\/,"");
+        let compressedFileName = compressedFileNameT.replace(".csv",".elf");
+
+        let outputPath = `${localStorage.getItem('compressFolderPath')}\\${compressedFileName}`;
+
+        runJarFile(0,inputPath,outputPath);
     });
 
-    uploadButtonForDecompression.addEventListener("click", function() {
-        let inputpath = fileInput.files[0].path;
-        let outputpath = inputpath.replace(/\.elf$/, '.csv');
-        runJarFile(1,inputpath,outputpath);
-    });
+    selectDirectory.addEventListener("click", function() {
 
+        var directoryInput = document.createElement("input");
+        directoryInput.type = "file";
+        directoryInput.webkitdirectory = true;
+        directoryInput.click();
+
+        directoryInput.addEventListener("change", function() {
+            var absolutePath = directoryInput.files[0].path;
+            var folderPath = absolutePath.replace(/\\[^\\]*$/, "");
+            directoryPath.value = folderPath;
+
+            localStorage.setItem('compressFolderPath',folderPath)
+        });
+    });
 };
 
 
@@ -76,8 +92,6 @@ function runJarFile(flag,inputFilePath, outputFilePath) {
         console.log(`JAR file process exited with code ${code}`);
     });
 }
-
-
 
 
 
