@@ -7,6 +7,15 @@ window.onload = function() {
 
     var uploadButtonForDecompression = document.getElementById("upload-button-decompress");
 
+    var selectDirectory = document.getElementById("select-directory-d");
+    var openDirectory = document.getElementById("open-directory-d");
+    var directoryPath = document.getElementById("directory-path-d");
+
+    var storedFolderPath = localStorage.getItem('decompressFolderPath');
+    if (storedFolderPath) {
+        directoryPath.value = storedFolderPath;
+    }
+
     function preventDefaultAndStopPropagation(e) {
         e.preventDefault();
         e.stopPropagation();
@@ -43,9 +52,46 @@ window.onload = function() {
     });
 
     uploadButtonForDecompression.addEventListener("click", function() {
-        let inputpath = fileInput.files[0].path;
-        let outputpath = inputpath.replace(/\.elf$/, '.csv');
-        runJarFile(1,inputpath,outputpath);
+        let inputPath = fileInput.files[0].path;
+        let decompressedFileNameT = inputPath.replace(/.*\\/,"");
+        let decompressedFileName = decompressedFileNameT.replace(".elf",".csv");
+        let outputPath;
+
+        if(localStorage.getItem('decompressFolderPath')){
+            outputPath = `${localStorage.getItem('decompressFolderPath')}\\${decompressedFileName}`;
+        }
+        else{
+            outputPath = inputPath.replace(".elf",".csv");
+            localStorage.setItem('decompressFolderPath',outputPath.replace(/\\[^\\]*$/, ""))
+        }
+
+        runJarFile(1,inputPath,outputPath);
+    });
+
+    selectDirectory.addEventListener("click", function() {
+
+        var directoryInput = document.createElement("input");
+        directoryInput.type = "file";
+        directoryInput.webkitdirectory = true;
+        directoryInput.click();
+
+        directoryInput.addEventListener("change", function() {
+            var absolutePath = directoryInput.files[0].path;
+            var folderPath = absolutePath.replace(/\\[^\\]*$/, "");
+            directoryPath.value = folderPath;
+
+            localStorage.setItem('decompressFolderPath',folderPath)
+        });
+    });
+
+
+    openDirectory.addEventListener("click", function() {
+        var folderPath = localStorage.getItem('decompressFolderPath');
+        if (folderPath) {
+            exec(`start ${folderPath}`);
+        } else {
+            console.error('Folder path not found in local storage.');
+        }
     });
 };
 
