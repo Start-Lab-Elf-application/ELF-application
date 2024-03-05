@@ -30,6 +30,11 @@ cnpm install electron -g
 
 4、使用 ide 连接 github 远程仓库
 
+5、预览
+```shell
+electron .
+```
+
 ###### TODO
 
 打包的时候下载太tmd慢了，需要研究一下打包
