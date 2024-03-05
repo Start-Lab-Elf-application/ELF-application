@@ -22,9 +22,13 @@
 <div class="right-content">
     <h1>Decompress</h1>
 
-    <button id="select-directory-d">选择文件夹</button>
-    <button id="open-directory-d">打开文件夹</button>
-    <input id="directory-path-d" type="text" readonly>
+    <div class="input-container">
+        <input id="directory-path-d" type="text" readonly>
+        <div class="button-container">
+            <button class="choose-d" id="select-directory-c">选择文件夹</button>
+            <button class="open-d" id="open-directory-c">打开文件夹</button>
+        </div>
+    </div>
 
     <label for="file-input">点击或拖动文件到此处</label>
     <input id="file-input" type="file" />

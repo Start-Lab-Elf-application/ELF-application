@@ -158,6 +158,58 @@ a {
     outline:none;
 }
 
+.button-container{
+    display: flex;
+}
+
+.choose-d{
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    color:#000000;
+    height: 30px;
+    width: 200px;
+    display: flex;
+    margin-left: 100px;
+    background-color: #eeeeee;
+    border: 1px solid #3c444d;
+    border-radius: 0px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.open-d{
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    color:#000000;
+    height: 30px;
+    width: 200px;
+    display: flex;
+    margin-right: 100px;
+    background-color: #eeeeee;
+    border: 1px solid #3c444d;
+    border-radius: 0px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.choose-d:hover {
+    background-color: #999999;
+}
+
+.choose-d:active {
+    background-color: #666666;
+}
+
+.open-d:hover {
+    background-color: #999999;
+}
+
+.open-d:active {
+    background-color: #666666;
+}
+
 /* 适用于label选取的无尺寸input */
 
 #file-input {
