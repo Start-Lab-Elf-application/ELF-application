@@ -126,8 +126,15 @@ a {
     margin-bottom: 50px;
 }
 
-#directory-path {
-    width: 300px;
+#directory-path-c {
+    width: 400px;
+    height: 27px;
+    border: 1px solid gray;
+}
+
+#directory-path-d {
+    width: 400px;
+    height: 27px;
     border: 1px solid gray;
 }
 

@@ -66,6 +66,7 @@ window.onload = function() {
         }
 
         runJarFile(1,inputPath,outputPath);
+        alert('test');
     });
 
     selectDirectory.addEventListener("click", function() {
