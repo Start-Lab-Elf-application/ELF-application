@@ -30,12 +30,6 @@ cnpm install electron -g
 
 4、使用 ide 连接 github 远程仓库
 
-###### 推荐webstorm
+###### TODO
 
-5、使用electron预览
-
-```shell
-electron .
-```
-
-此时应该会出现预览窗口
+打包的时候下载太tmd慢了，需要研究一下打包
