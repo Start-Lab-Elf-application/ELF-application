@@ -44,6 +44,7 @@ img {
     border: 0
 }
 
+/* 链接 */
 
 a {
     color: #333;
@@ -52,6 +53,7 @@ a {
     text-decoration: none
 }
 
+/* 左侧边栏 */
 
 .sidebar-scroll {
     background-color: #3c444d;
@@ -114,6 +116,8 @@ a {
     border-left: #404040 2px solid;
 }
 
+/* 右侧尺寸 */
+
 .right-content {
     position: relative;
     left: 180px;
@@ -131,6 +135,8 @@ a {
     height: 27px;
     border: 1px solid gray;
 }
+
+/* 地址展示框 */
 
 #directory-path-c {
     width: 400px;
@@ -152,11 +158,15 @@ a {
     outline:none;
 }
 
+/* 适用于label选取的无尺寸input */
+
 #file-input {
     width: 0px;
     height: 0px;
     opacity: 0;
 }
+
+/* 文件选取框 */
 
 label {
     display: block;
@@ -178,6 +188,8 @@ label:hover {
 label:active {
     border-color: #000;
 }
+
+/* 按钮，需要重写 */
 
 button {
     display: block;
