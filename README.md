@@ -12,7 +12,7 @@
 
 ##### 搭建流程：
 
-1、下载node.js
+1、下载node.js,配置环境变量（csdn上应该就有）
 
 [node.js官网](https://nodejs.org/en)
 
@@ -29,6 +29,11 @@ cnpm install electron -g
 ```
 
 4、使用 ide 连接 github 远程仓库
+
+5、预览
+```shell
+electron .
+```
 
 ###### TODO
 
