@@ -1,4 +1,4 @@
-const { exec, dialog } = require('child_process');
+const { exec} = require('child_process');
 
 window.onload = function() {
 
