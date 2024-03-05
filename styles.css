@@ -132,13 +132,23 @@ a {
     border: 1px solid gray;
 }
 
+#directory-path-c {
+    width: 400px;
+    height: 27px;
+    border: 1px solid gray;
+}
+
+#directory-path-c:focus{
+    outline:none;
+}
+
 #directory-path-d {
     width: 400px;
     height: 27px;
     border: 1px solid gray;
 }
 
-#directory-path:focus{
+#directory-path-d:focus{
     outline:none;
 }
 
