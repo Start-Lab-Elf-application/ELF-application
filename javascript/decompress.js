@@ -24,13 +24,13 @@ window.onload = function() {
     fileInput.addEventListener("change", function() {
         var fileName = fileInput.value.split("\\").pop();
         label.textContent = fileName;
-        label.style.border = '2px dashed #00EE00';
+        label.style.border = '2px dashed #447249';
 
     });
 
     label.addEventListener('dragover', function (e) {
         preventDefaultAndStopPropagation(e);
-        this.style.border = '2px dashed #B8A1F5';
+        this.style.border = '2px dashed #555A75';
     });
 
     label.addEventListener('dragleave', function (e) {
@@ -41,7 +41,7 @@ window.onload = function() {
     label.addEventListener('drop', function (e) {
         preventDefaultAndStopPropagation(e);
         if (e.dataTransfer.files.length) {
-            this.style.border = '2px dashed #00EE00';
+            this.style.border = '2px dashed #447249';
             fileInput.files = e.dataTransfer.files;
             var fileName = fileInput.value.split("\\").pop();
             label.textContent = fileName;
@@ -114,5 +114,6 @@ function runJarFile(flag,inputFilePath, outputFilePath) {
 
     child.on('close', (code) => {
         console.log(`JAR file process exited with code ${code}`);
+        alert('解压完成');
     });
 }
