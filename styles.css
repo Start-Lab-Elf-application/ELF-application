@@ -130,12 +130,6 @@ a {
     margin-bottom: 50px;
 }
 
-#directory-path-c {
-    width: 400px;
-    height: 27px;
-    border: 1px solid gray;
-}
-
 /* 地址展示框 */
 
 #directory-path-c {
@@ -160,6 +154,7 @@ a {
 
 .button-container{
     display: flex;
+    padding-top: 0;
 }
 
 .choose-d{
@@ -234,7 +229,7 @@ label {
 }
 
 label:hover {
-    border-color: #B8A1F5;
+    border-color: #555A75;
 }
 
 label:active {
@@ -248,7 +243,7 @@ button {
     width: 100px;
     height: 40px;
     margin: 10px auto;
-    background-color: #0099ff;
+    background-color: #353d44;
     border: none;
     border-radius: 5px;
     color: #fff;
@@ -257,11 +252,11 @@ button {
 }
 
 button:hover {
-    background-color: #00ccff;
+    background-color: #2a2f34;
 }
-
+/*
 button:active {
-    background-color: #0066ff;
+    background-color: #999999;
 }
-
+*/
 
