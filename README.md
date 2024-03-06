@@ -35,6 +35,11 @@ cnpm install electron -g
 electron .
 ```
 
-###### TODO
+## TODO
 
-打包的时候下载太tmd慢了，需要研究一下打包
+1、文件夹选取bug：不能选取空文件夹和嵌套文件夹
+
+2、css块格式修改
+
+3、完善压缩时子进程执行的alert（压缩中，压缩完成）
+
