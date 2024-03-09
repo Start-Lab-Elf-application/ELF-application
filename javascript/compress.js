@@ -1,4 +1,6 @@
 const { exec} = require('child_process');
+const fs= require('fs');
+let amountOfCompressTask = 0;
 
 window.onload = function() {
 
@@ -95,27 +97,47 @@ window.onload = function() {
     });
 };
 
-function runJarFile(flag,inputFilePath, outputFilePath) {
+function runJarFile(flag, inputFilePath, outputFilePath) {
     const javaExecutable = 'java';
     const jarPath = 'jar/start-compress.jar';
+    const startTime = Date.now(); // 记录压缩开始时间
 
     const jarCommand = `${javaExecutable} -jar ${jarPath} ${flag} "${inputFilePath}" "${outputFilePath}"`;
 
     console.log(jarCommand);
 
+    amountOfCompressTask += 1;
+    updateTask(amountOfCompressTask);
+
     const child = exec(jarCommand, (error, stdout, stderr) => {
+
         if (error) {
             console.error(`Error running JAR file: ${error.message}`);
+            amountOfCompressTask -= 1;
+            updateTask(amountOfCompressTask);
             return;
         }
     });
 
     child.on('close', (code) => {
+        amountOfCompressTask -= 1;
+        updateTask(amountOfCompressTask);
+
         console.log(`JAR file process exited with code ${code}`);
-        alert('压缩完成');
+
+        const originalSize = fs.statSync(inputFilePath).size;
+        const compressedSize = fs.statSync(outputFilePath).size;
+        const compressionRatio = (originalSize / compressedSize).toFixed(2);
+        const endTime = Date.now();
+        const compressionTime = ((endTime - startTime) / 1000).toFixed(2);
+
+
+        alert(`压缩完成\n压缩时间: ${compressionTime}秒\n压缩比率: ${compressionRatio}`);
     });
 }
 
-
+function updateTask(amountOfCompressTask){
+    document.getElementById("task-c").textContent = "Numbers of task: "+amountOfCompressTask;
+}
 
 
