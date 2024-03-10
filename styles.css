@@ -259,4 +259,18 @@ button:active {
     background-color: #999999;
 }
 */
-
+.custom-alert {
+    position: fixed;
+    top: 50%;
+    left: calc(50% + 90px);
+    transform: translate(-50%, -50%);
+    padding: 20px; /* 内边距 */
+    background-color: #767da0;
+    color: #ffffff;
+    border: 1px solid #8a8d96;
+    border-radius: 6px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    opacity: 1;
+    transition: opacity 1s ease;
+}

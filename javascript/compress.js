@@ -56,7 +56,7 @@ window.onload = function() {
     uploadButtonForCompression.addEventListener("click", function() {
         let inputPath = fileInput.files[0].path;
         let compressedFileNameT = inputPath.replace(/.*\\/,"");
-        let compressedFileName = compressedFileNameT.replace(".csv",".elf");
+        let compressedFileName = "Compressed-"+ compressedFileNameT.replace(".csv",".elf");
         let outputPath;
 
         if(localStorage.getItem('compressFolderPath')){
@@ -127,12 +127,14 @@ function runJarFile(flag, inputFilePath, outputFilePath) {
 
         const originalSize = fs.statSync(inputFilePath).size;
         const compressedSize = fs.statSync(outputFilePath).size;
-        const compressionRatio = (originalSize / compressedSize).toFixed(2);
+        console.log(`originalSize: ${originalSize}`);
+        console.log(`compressedSize: ${compressedSize}`);
+        const compressionRatio = (compressedSize / originalSize).toFixed(2);
         const endTime = Date.now();
         const compressionTime = ((endTime - startTime) / 1000).toFixed(2);
 
 
-        alert(`压缩完成\n压缩时间: ${compressionTime}秒\n压缩比率: ${compressionRatio}`);
+        showCustomAlert(`压缩完成\n压缩时间: ${compressionTime}秒\n压缩比率: ${compressionRatio}`);
     });
 }
 
@@ -140,4 +142,19 @@ function updateTask(amountOfCompressTask){
     document.getElementById("task-c").textContent = "Numbers of task: "+amountOfCompressTask;
 }
 
+function showCustomAlert(message) {
 
+    const alertBox = document.createElement('div');
+    alertBox.className = 'custom-alert';
+    alertBox.textContent = message;
+
+    document.body.appendChild(alertBox);
+
+    setTimeout(() => {
+        alertBox.style.opacity = '0';
+        }, 1000);
+
+    setTimeout(() => {
+        document.body.removeChild(alertBox);
+        }, 2000);
+}
