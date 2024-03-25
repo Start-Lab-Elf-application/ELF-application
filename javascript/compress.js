@@ -1,6 +1,5 @@
 const { exec} = require('child_process');
 const fs= require('fs');
-let amountOfCompressTask = 0;
 
 window.onload = function() {
 
@@ -9,152 +8,165 @@ window.onload = function() {
 
     var uploadButtonForCompression = document.getElementById("upload-button-compress");
 
-    var selectDirectory = document.getElementById("select-directory-c");
-    var openDirectory = document.getElementById("open-directory-c");
-    var directoryPath = document.getElementById("directory-path-c");
-
-    var storedFolderPath = localStorage.getItem('compressFolderPath');
-    if (storedFolderPath) {
-        directoryPath.value = storedFolderPath;
-    }
-
     function preventDefaultAndStopPropagation(e) {
         e.preventDefault();
         e.stopPropagation();
     }
 
-    fileInput.addEventListener("change", function() {
-        var fileName = fileInput.value.split("\\").pop();
-        label.textContent = fileName;
-        label.style.border = '2px dashed #447249';
+    document.getElementById('fileInput').addEventListener('change', handleFileSelect, false);
 
-    });
+    function handleFileSelect(event) {
+        console.log("test");
+        var files = event.target.files;
+        var fileList = document.getElementById('fileList');
 
-    label.addEventListener('dragover', function (e) {
-        preventDefaultAndStopPropagation(e);
-        this.style.border = '2px dashed #555A75';
-    });
+        // 为每个选中的文件添加一个列表项
+        for (var i = 0; i < files.length; i++) {
+            var li = document.createElement('li');
+            li.style.display = 'flex';
+            li.style.justifyContent = 'space-between';
+            li.style.alignItems = 'center';
 
-    label.addEventListener('dragleave', function (e) {
-        preventDefaultAndStopPropagation(e);
-        this.style.border = '2px dashed #ccc';
-    });
+            var checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.className = 'fileCheckbox';
+            li.appendChild(checkbox);
 
-    label.addEventListener('drop', function (e) {
-        preventDefaultAndStopPropagation(e);
-        if (e.dataTransfer.files.length) {
-            this.style.border = '2px dashed #447249';
-            fileInput.files = e.dataTransfer.files;
-            var fileName = fileInput.value.split("\\").pop();
-            label.textContent = fileName;
+            var fileName = document.createElement('span');
+            fileName.innerHTML = files[i].name;
+            li.appendChild(fileName);
 
-        } else {
-            this.style.border = '1px solid #ccc';
+            var fileSize = document.createElement('span');
+            fileSize.innerHTML = files[i].size + ' bytes';
+            li.appendChild(fileSize);
+
+            var compressedFileSize = document.createElement('span');
+            compressedFileSize.innerHTML = '1';
+            li.appendChild(compressedFileSize);
+
+            var compressRatio = document.createElement('span');
+            compressRatio.innerHTML = '1';
+            li.appendChild(compressRatio);
+
+            var compressionTime = document.createElement('span');
+            compressionTime.innerHTML = '1';
+            li.appendChild(compressionTime);
+
+            var fileStatus = document.createElement('span');
+            fileStatus.innerHTML = '未压缩';
+            li.appendChild(fileStatus);
+
+            var deleteButton = document.createElement('button');
+            deleteButton.innerHTML = '删除';
+            deleteButton.onclick = function () {
+                fileList.removeChild(this.parentNode);
+            };
+            li.appendChild(deleteButton);
+
+            li.fileReference = files[i];
+            console.log(li.fileReference);
+
+            fileList.appendChild(li);
         }
-    });
+    }
 
-    uploadButtonForCompression.addEventListener("click", function() {
-        let inputPath = fileInput.files[0].path;
-        let compressedFileNameT = inputPath.replace(/.*\\/,"");
-        let compressedFileName = "Compressed-"+ compressedFileNameT.replace(".csv",".elf");
-        let outputPath;
+    function clearList() {
+        var fileList = document.getElementById('fileList');
 
-        if(localStorage.getItem('compressFolderPath')){
-            outputPath = `${localStorage.getItem('compressFolderPath')}\\${compressedFileName}`;
+        while (fileList.firstChild) {
+            fileList.removeChild(fileList.firstChild);
         }
-        else{
-            outputPath = inputPath.replace(".csv",".elf");
-            localStorage.setItem('compressFolderPath',outputPath.replace(/\\[^\\]*$/, ""))
-        }
+    }
 
-        runJarFile(0,inputPath,outputPath);
-    });
+    function submitCheckedItems() {
 
-    selectDirectory.addEventListener("click", function() {
 
-        var directoryInput = document.createElement("input");
-        directoryInput.type = "file";
-        directoryInput.webkitdirectory = true;
-        directoryInput.click();
+        var checkedItems = document.querySelectorAll('.fileCheckbox:checked');
 
-        directoryInput.addEventListener("change", function() {
-            var absolutePath = directoryInput.files[0].path;
-            var folderPath = absolutePath.replace(/\\[^\\]*$/, "");
-            directoryPath.value = folderPath;
+        checkedItems.forEach(function (checkbox) {
+            if (checkbox.checked) {
+                var file = checkbox.parentNode.fileReference;
+                var dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
 
-            localStorage.setItem('compressFolderPath',folderPath)
+                var uploadInput = document.createElement('input');
+                uploadInput.type = 'file';
+                uploadInput.name = 'file';
+                uploadInput.files = dataTransfer.files;
+
+
+                var inputPath = file.path;
+                var outputPath = inputPath.replace(".csv", ".elf");
+
+                runJarFile(checkbox.parentNode, 0, inputPath, outputPath);
+            }
         });
+
+    }
+
+    uploadButtonForCompression.addEventListener("click", function () {
+        submitCheckedItems();
     });
 
 
-    openDirectory.addEventListener("click", function() {
-        var folderPath = localStorage.getItem('compressFolderPath');
-        if (folderPath) {
-            exec(`start ${folderPath}`);
-        } else {
-            console.error('Folder path not found in local storage.');
+    function runJarFile(parentNode, flag, inputFilePath, outputFilePath) {
+        const javaExecutable = 'java';
+        const jarPath = 'jar/start-compress.jar';
+        const startTime = Date.now(); // 记录压缩开始时间
+
+        const jarCommand = `${javaExecutable} -jar ${jarPath} ${flag} "${inputFilePath}" "${outputFilePath}"`;
+
+        console.log(jarCommand);
+
+        const child = exec(jarCommand, (error, stdout, stderr) => {
+
+            if (error) {
+                console.error(`Error running JAR file: ${error.message}`);
+                return;
+            }
+        });
+
+        child.on('close', (code) => {
+
+            console.log(`JAR file process exited with code ${code}`);
+
+            const originalSize = fs.statSync(inputFilePath).size;
+            const compressedSize = fs.statSync(outputFilePath).size;
+            console.log(`originalSize: ${originalSize}`);
+            console.log(`compressedSize: ${compressedSize}`);
+            const compressionRatio = (compressedSize / originalSize).toFixed(2);
+            const endTime = Date.now();
+            const compressionTime = ((endTime - startTime) / 1000).toFixed(2);
+            updateFileList(parentNode, compressionRatio, compressedSize, compressionTime)
+
+
+        });
+    }
+
+    function updateFileList(parentNode, compressionRatio, compressedSize, compressionTime) {
+        var spans = parentNode.getElementsByTagName('span');
+
+        if (spans[3]) {
+            spans[3].innerHTML = "";
+            spans[3].textContent = compressionRatio;
         }
-    });
-};
 
-function runJarFile(flag, inputFilePath, outputFilePath) {
-    const javaExecutable = 'java';
-    const jarPath = 'jar/start-compress.jar';
-    const startTime = Date.now(); // 记录压缩开始时间
-
-    const jarCommand = `${javaExecutable} -jar ${jarPath} ${flag} "${inputFilePath}" "${outputFilePath}"`;
-
-    console.log(jarCommand);
-
-    amountOfCompressTask += 1;
-    updateTask(amountOfCompressTask);
-
-    const child = exec(jarCommand, (error, stdout, stderr) => {
-
-        if (error) {
-            console.error(`Error running JAR file: ${error.message}`);
-            amountOfCompressTask -= 1;
-            updateTask(amountOfCompressTask);
-            return;
+        if (spans[2]) {
+            spans[2].innerHTML = "";
+            spans[2].textContent = compressedSize + ' bytes';
         }
-    });
 
-    child.on('close', (code) => {
-        amountOfCompressTask -= 1;
-        updateTask(amountOfCompressTask);
-
-        console.log(`JAR file process exited with code ${code}`);
-
-        const originalSize = fs.statSync(inputFilePath).size;
-        const compressedSize = fs.statSync(outputFilePath).size;
-        console.log(`originalSize: ${originalSize}`);
-        console.log(`compressedSize: ${compressedSize}`);
-        const compressionRatio = (compressedSize / originalSize).toFixed(2);
-        const endTime = Date.now();
-        const compressionTime = ((endTime - startTime) / 1000).toFixed(2);
+        if (spans[5]) {
+            spans[5].innerHTML = "";
+            spans[5].textContent = '已压缩';
+        }
 
 
-        showCustomAlert(`压缩完成\n压缩时间: ${compressionTime}秒\n压缩比率: ${compressionRatio}`);
-    });
-}
+        if (spans[4]) {
+            spans[4].innerHTML = "";
+            spans[4].textContent = compressionTime + 's';
+        }
 
-function updateTask(amountOfCompressTask){
-    document.getElementById("task-c").textContent = "Numbers of task: "+amountOfCompressTask;
-}
+    }
 
-function showCustomAlert(message) {
-
-    const alertBox = document.createElement('div');
-    alertBox.className = 'custom-alert';
-    alertBox.textContent = message;
-
-    document.body.appendChild(alertBox);
-
-    setTimeout(() => {
-        alertBox.style.opacity = '0';
-        }, 1000);
-
-    setTimeout(() => {
-        document.body.removeChild(alertBox);
-        }, 2000);
 }
