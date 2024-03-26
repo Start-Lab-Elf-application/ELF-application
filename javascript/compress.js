@@ -80,8 +80,12 @@ window.onload = function() {
 
     function submitCheckedItems() {
 
-
         var checkedItems = document.querySelectorAll('.fileCheckbox:checked');
+        var totalFiles = checkedItems.length;
+        var processedFiles = 0;
+
+        var modal = createProgressModal(totalFiles);
+        modal.style.display = "block";
 
         checkedItems.forEach(function (checkbox) {
             if (checkbox.checked) {
@@ -98,7 +102,18 @@ window.onload = function() {
                 var inputPath = file.path;
                 var outputPath = inputPath.replace(".csv", ".elf");
 
-                runJarFile(checkbox.parentNode, 0, inputPath, outputPath);
+                runJarFile(checkbox.parentNode, 0, inputPath, outputPath, function() {
+                    processedFiles++;
+
+                    updateProgress(modal, processedFiles, totalFiles);
+
+                    if (processedFiles === totalFiles) {
+                        modal.style.opacity = 0;
+                        setTimeout(function() {
+                            modal.style.display = "none";
+                        }, 500);
+                    }
+                });
             }
         });
 
@@ -109,7 +124,7 @@ window.onload = function() {
     });
 
 
-    function runJarFile(parentNode, flag, inputFilePath, outputFilePath) {
+    function runJarFile(parentNode, flag, inputFilePath, outputFilePath, callback) {
         const javaExecutable = 'java';
         const jarPath = 'jar/start-compress.jar';
         const startTime = Date.now(); // 记录压缩开始时间
@@ -140,6 +155,9 @@ window.onload = function() {
             updateFileList(parentNode, compressionRatio, compressedSize, compressionTime)
 
 
+            setTimeout(function() {
+                callback();
+            }, 100);
         });
     }
 
@@ -167,6 +185,48 @@ window.onload = function() {
             spans[4].textContent = compressionTime + 's';
         }
 
+    }
+
+    function createProgressModal(totalFiles) {
+        // TODO： ai写的
+        var modal = document.createElement('div');
+        modal.id = "progressModal";
+        modal.classList.add("modal");
+
+        var modalContent = document.createElement('div');
+        modalContent.classList.add("modal-content");
+
+        var closeButton = document.createElement('span');
+        closeButton.classList.add("close");
+        closeButton.textContent = "×";
+        closeButton.onclick = function() {
+            modal.style.display = "none";
+        };
+
+        var header = document.createElement('h2');
+        header.textContent = "File Processing Progress";
+
+        var progressInfo = document.createElement('div');
+        progressInfo.id = "progressInfo";
+
+        progressInfo.innerHTML = `Processed files: <span id="processedFiles">0</span>/<span id="totalFiles">${totalFiles}</span>`;
+
+        modalContent.appendChild(closeButton);
+        modalContent.appendChild(header);
+        modalContent.appendChild(progressInfo);
+        modal.appendChild(modalContent);
+
+        document.body.appendChild(modal);
+
+        return modal;
+    }
+
+    function updateProgress(modal, processedFiles, totalFiles) {
+        var processedFilesElement = modal.querySelector("#processedFiles");
+        processedFilesElement.textContent = processedFiles;
+
+        var totalFilesElement = modal.querySelector("#totalFiles");
+        totalFilesElement.textContent = totalFiles;
     }
 
 }
